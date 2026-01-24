@@ -31,7 +31,7 @@ const pages: [string, JSX.Element, string][] = [
 ];
 
 const siteNav = (
-  <div className="flex flex-row gap-2 items-center bg-neutral-200 dark:bg-neutral-800 rounded-full p-1">
+  <div className="flex flex-row justify-self-center gap-2 items-center bg-neutral-200 dark:bg-neutral-800 rounded-full p-1">
     {pages.map(([name, icon, path]) => (
       <NavIcon name={name} path={path} key={path}>
         {icon}
@@ -54,14 +54,16 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <main className="p-10 max-w-4xl mx-auto flex flex-col">
-            <div className="flex justify-between items-center">
+            <div className="grid grid-cols-3 items-center mb-5">
               <div>{/* TODO: logo */}</div>
               {siteNav}
-              <UserButton
-                fallback={
-                  <div className="size-7 rounded-full border border-neutral-500" />
-                }
-              />
+              <div className="justify-self-end">
+                <UserButton
+                  fallback={
+                    <div className="size-7 rounded-full border border-neutral-500" />
+                  }
+                />
+              </div>
             </div>
             <div>{children}</div>
           </main>

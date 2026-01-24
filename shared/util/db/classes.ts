@@ -19,16 +19,20 @@ export const authorized = (userId: string) =>
     ),
   );
 
-export const recentlyActive = desc(
-  union(
-    db
-      .select({ createdAt: classes.createdAt })
-      .from(classes)
-      .where(eq(sql`id`, classes.id)),
-    db
-      .select({ createdAt: responses.createdAt })
-      .from(responses)
-      .leftJoin(discussions, eq(discussions.id, responses.discussionId))
-      .where(eq(discussions.classId, classes.id)),
-  ),
-);
+export const latestActivity = union(
+  db
+    .select({ createdAt: classes.createdAt })
+    .from(classes)
+    .where(eq(sql`id`, classes.id)),
+  db
+    .select({ createdAt: discussions.createdAt })
+    .from(discussions)
+    .where(eq(discussions.classId, classes.id)),
+  db
+    .select({ createdAt: responses.createdAt })
+    .from(responses)
+    .leftJoin(discussions, eq(discussions.id, responses.discussionId))
+    .where(eq(discussions.classId, classes.id)),
+).orderBy(desc(sql`createdAt`));
+
+export const recentlyActive = desc(latestActivity);

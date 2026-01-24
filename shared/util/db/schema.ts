@@ -42,6 +42,7 @@ export const discussions = sqliteTable("discussions", {
   description: text(),
 
   locked: int().default(0),
+  createdAt: int({ mode: "timestamp" }).default(sql`(current_timestamp)`),
 });
 
 export const responses = sqliteTable("responses", {
