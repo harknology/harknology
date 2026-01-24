@@ -1,8 +1,6 @@
-import Image from "next/image";
 import { classes } from "./shared/util/db/schema";
 import { db } from "./shared/util/db/db";
 import { auth } from "@clerk/nextjs/server";
-import { eq, or } from "drizzle-orm";
 import { authorized } from "./shared/util/db/classes";
 import UserProfile, {
   UserProfileDisplay,
@@ -24,8 +22,8 @@ export default async function Home() {
     const me = await auth();
     await db.insert(classes).values({
       teacher: me.userId!,
-      name: data.get("name")!,
-      description: data.get("description"),
+      name: data.get("name")!.toString(),
+      description: data.get("description")?.toString(),
     });
     revalidatePath("/");
   }
