@@ -1,6 +1,6 @@
-import { authorized } from "@/app/shared/util/db/classes";
-import { db } from "@/app/shared/util/db/db";
-import { classes } from "@/app/shared/util/db/schema";
+import { authorized } from "$/util/db/classes";
+import { db } from "$/util/db/db";
+import { classes } from "$/util/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";

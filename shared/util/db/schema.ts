@@ -6,6 +6,10 @@ export const classes = sqliteTable("classes", {
   name: text().notNull(),
   description: text(),
   teacher: text().notNull(),
+
+  createdAt: int({ mode: "timestamp" }).default(sql`(current_timestamp)`),
+
+  color: text().default("#83e2b6"),
 });
 
 export const studentClasses = sqliteTable("studentClasses", {

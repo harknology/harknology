@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { JSX, Suspense } from "react";
+import AcademicCap from "$/components/icons/academic-cap";
+import Home from "@/shared/components/icons/home";
+import NavIcon from "@/shared/components/nav-icon";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,18 +25,46 @@ export const metadata: Metadata = {
 
 export const runtime = "edge";
 
-export default function RootLayout({
+const pages: [string, JSX.Element, string][] = [
+  ["Home", <Home className="size-6 block" key="home" />, "/"],
+  ["Classes", <AcademicCap className="size-6 block" key="classes" />, "/c"],
+];
+
+const siteNav = (
+  <div className="flex flex-row gap-2 items-center bg-neutral-200 dark:bg-neutral-800 rounded-full p-1">
+    {pages.map(([name, icon, path]) => (
+      <NavIcon name={name} path={path} key={path}>
+        {icon}
+      </NavIcon>
+    ))}
+  </div>
+);
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId, redirectToSignIn } = await auth();
+  if (!userId) return redirectToSignIn();
   return (
     <ClerkProvider>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <main className="p-10">{children}</main>
+          <main className="p-10 max-w-4xl mx-auto flex flex-col">
+            <div className="flex justify-between items-center">
+              <div>{/* TODO: logo */}</div>
+              {siteNav}
+              <UserButton
+                fallback={
+                  <div className="size-7 rounded-full border border-neutral-500" />
+                }
+              />
+            </div>
+            <div>{children}</div>
+          </main>
         </body>
       </html>
     </ClerkProvider>
